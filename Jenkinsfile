@@ -10,9 +10,11 @@ pipeline {
             steps {
                 script { currentBuild.description = "${params.buildDescription}" }
                 git url: "${env.GIT_REPO_URL}", branch: "${params.BRANCH ?: 'main'}", changelog: false
-                dir(env.JOB_BASE_NAME) {
-                    sh 'gretl importDataToStage refreshOerebWMSTablesStage'
-                    zip zipFile: 'xtfdata.zip', glob: '*.xtf', archive: true
+                container('gretl') {
+                    dir(env.JOB_BASE_NAME) {
+                        sh 'gretl importDataToStage refreshOerebWMSTablesStage'
+                        zip zipFile: 'xtfdata.zip', glob: '*.xtf', archive: true
+                    }
                 }
                 stash name: "gretljob"
                 emailext (
@@ -32,8 +34,10 @@ pipeline {
             agent { label 'gretl' }
             steps {
                 unstash name: "gretljob"
-                dir(env.JOB_BASE_NAME) {
-                    sh 'gretl importDataToLive refreshOerebWMSTablesLive uploadXtfToS3Geodata'
+                container('gretl') {
+                    dir(env.JOB_BASE_NAME) {
+                        sh 'gretl importDataToLive refreshOerebWMSTablesLive uploadXtfToS3Geodata'
+                    }
                 }
             }
         }
