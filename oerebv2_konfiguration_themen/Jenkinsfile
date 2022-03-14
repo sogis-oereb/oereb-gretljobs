@@ -2,6 +2,9 @@ pipeline {
     agent { label 'gretl' }
     stages {
         stage('GRETL job') {
+            options {
+                retry(2)
+            }
             steps {
                 git url: "${env.GIT_REPO_URL}", branch: "${params.BRANCH ?: 'main'}", changelog: false
                 container('gretl') {
