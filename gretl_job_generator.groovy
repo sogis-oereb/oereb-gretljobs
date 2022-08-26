@@ -83,13 +83,26 @@ for (jobFile in jobFiles) {
       }
     }
     if (jobProperties.getProperty('triggers.upstream') != 'none') {
-      triggers {
-        upstream(jobProperties.getProperty('triggers.upstream'), 'SUCCESS')
+      properties {
+        pipelineTriggers {
+          triggers {
+            upstream {
+              upstreamProjects(jobProperties.getProperty('triggers.upstream'))
+              threshold('SUCCESS')
+            }
+          }
+        }
       }
     }
-    if (jobProperties.getProperty('triggers.cron') != '' && productionEnv) { // we want triggers only in production environment
-      triggers {
-        cron(jobProperties.getProperty('triggers.cron'))
+    if (jobProperties.getProperty('triggers.cron') != '' && productionEnv) { // we want cron triggers only in production environment
+      properties {
+        pipelineTriggers {
+          triggers {
+            cron {
+              spec(jobProperties.getProperty('triggers.cron'))
+            }
+          }
+        }
       }
     }
 
