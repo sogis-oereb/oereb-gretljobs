@@ -113,6 +113,11 @@ for (jobFile in jobFiles) {
         }
       }
     }
+    if (jobProperties.getProperty('nodeLabel') != null) {
+      parameters {
+        choiceParam('nodeLabel', [jobProperties.getProperty('nodeLabel')], 'Label of the node that must run the job')
+      }
+    }
 
     environmentVariables {
       // make the Git repository URL available on the Jenkins agent
