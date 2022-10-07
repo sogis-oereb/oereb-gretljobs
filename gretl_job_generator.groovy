@@ -40,7 +40,7 @@ for (jobFile in jobFiles) {
     'authorization.permissions':'nobody',
     'logRotator.numToKeep':'unlimited',
     'parameters.fileParam':'none',
-    'parameters.stringParam':'buildDescription;Keine Beschreibung angegeben;Beschreibung/Grund für die Publikation der Daten',
+    'parameters.stringParams':'buildDescription;Keine Beschreibung angegeben;Beschreibung/Grund für die Publikation der Daten',
     'triggers.upstream':'none',
     'triggers.cron':''
   ])
@@ -64,11 +64,16 @@ for (jobFile in jobFiles) {
         fileParam(jobProperties.getProperty('parameters.fileParam'), 'Select file to upload')
       }
     }
-    if (jobProperties.getProperty('parameters.stringParam') != 'none') {
-      def propertyValues = jobProperties.getProperty('parameters.stringParam').split(';')
-      if (propertyValues.length == 3) {
-        parameters {
-          stringParam(propertyValues[0], propertyValues[1], propertyValues[2])
+    if (jobProperties.getProperty('parameters.stringParams') != 'none') {
+      def stringParams = jobProperties.getProperty('parameters.stringParams').split('@')
+      for ( sp in stringParams ) {
+        def spValues = sp.split(';')
+        if (spValues.length == 3) {
+          parameters {
+            stringParam(spValues[0], spValues[1], spValues[2])
+          }
+        } else {
+          println '    WARNING: Invalid stringParam definiton: ' + spValues
         }
       }
     }
