@@ -1,5 +1,8 @@
 # oereb-gretljobs
 
+**Important note: This repository is not active anymore.
+Development continues in https://github.com/sogis/oereb-gretljobs.**
+
 Contains GRETL jobs for publishing data to OEREB-Kataster
 
 ## Job types
